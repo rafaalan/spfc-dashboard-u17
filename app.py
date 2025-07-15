@@ -50,22 +50,96 @@ st.title("📊 Dashboard SPFC Sub-17 - Copa do Brasil 2025")
 # Botão de exportação
 st.download_button("📥 Baixar CSV dos dados coletivos", data=coletivo_df.to_csv(index=False), file_name="dados_spfc_sub17.csv", mime="text/csv")
 
-# Seção: Painel Coletivo (como já está)
-# [... mantido igual ao código anterior ...]
+# =========================
+# 🔵 PAINEL COLETIVO
+# =========================
 
-# Seção: Painel Individual
-st.markdown("### 👤 Painel de Desempenho Individual")
+# Filtro por jogo
+selected_game = st.selectbox("Selecione um jogo:", coletivo_df["Jogo"])
+filtered = coletivo_df[coletivo_df["Jogo"] == selected_game].iloc[0]
 
-jogadores = individual_df["Jogador"].unique()
-jogador_sel = st.selectbox("Selecione um jogador:", jogadores)
-jogador_df = individual_df[individual_df["Jogador"] == jogador_sel]
+# Métricas principais
+st.subheader(f"⚽ {filtered['Placar']} vs {filtered['Adversário']} ({filtered['Data']})")
+col1, col2 = st.columns(2)
+with col1:
+    st.metric("xG SPFC", filtered["xG_SPFC"])
+    st.metric("Posse SPFC (%)", filtered["Posse_SPFC"])
+    st.metric("PPDA SPFC", filtered["PPDA_SPFC"])
+with col2:
+    st.metric("xG Adversário", filtered["xG_Adversario"])
+    st.metric("Posse Adversário (%)", filtered["Posse_Adv"])
+    st.metric("PPDA Adversário", filtered["PPDA_Adv"])
 
-st.markdown(f"#### Estatísticas de {jogador_sel}")
-st.dataframe(jogador_df.set_index("Jogo"))
+# Comparação de posse
+st.markdown("### Comparação de Posse de Bola")
+posse_df = pd.DataFrame({'Time': ['SPFC', 'Adversário'], 'Posse (%)': [filtered['Posse_SPFC'], filtered['Posse_Adv']]})
+st.bar_chart(posse_df.set_index('Time'))
 
-# Gráfico de evolução xG e gols
-fig_ind = px.bar(jogador_df, x="Jogo", y=["xG", "Gols"], barmode="group", title=f"xG vs Gols - {jogador_sel}")
-st.plotly_chart(fig_ind)
+# Evolução dos jogos (xG)
+st.markdown("### Evolução dos jogos (xG)")
+fig = px.line(coletivo_df, x="Jogo", y=["xG_SPFC", "xG_Adversario"], markers=True, labels={"value": "xG", "Jogo": "Rodada", "variable": "Time"})
+st.plotly_chart(fig)
 
-fig_final = px.line(jogador_df, x="Jogo", y="Finalizacoes", title=f"Finalizações por jogo - {jogador_sel}", markers=True)
-st.plotly_chart(fig_final)
+# Tabela geral
+st.markdown("### 📋 Tabela Geral")
+st.dataframe(coletivo_df.set_index("Jogo"))
+
+# Resumo estatístico
+st.markdown("### 📊 Análise Estatística Coletiva")
+resumo = pd.DataFrame({
+    'Métrica': [
+        'Média xG SPFC', 'Média xG Adversário',
+        'Média Posse SPFC (%)', 'Média Posse Adversário (%)',
+        'Média PPDA SPFC', 'Média PPDA Adversário',
+        'Média Faltas SPFC', 'Média Faltas Adversário'
+    ],
+    'Valor': [
+        round(coletivo_df["xG_SPFC"].mean(), 2), round(coletivo_df["xG_Adversario"].mean(), 2),
+        round(coletivo_df["Posse_SPFC"].mean(), 2), round(coletivo_df["Posse_Adv"].mean(), 2),
+        round(coletivo_df["PPDA_SPFC"].mean(), 2), round(coletivo_df["PPDA_Adv"].mean(), 2),
+        round(coletivo_df["Faltas_SPFC"].mean(), 2), round(coletivo_df["Faltas_Adv"].mean(), 2)
+    ]
+})
+st.dataframe(resumo, hide_index=True)
+
+# Gráficos por métrica
+st.markdown("### 📈 Visão Geral por Métrica")
+for coluna, titulo in zip(
+    ["xG_SPFC", "xG_Adversario", "PPDA_SPFC", "Posse_SPFC"],
+    ["xG SPFC por Jogo", "xG Adversário por Jogo", "PPDA SPFC por Jogo", "Posse de Bola SPFC por Jogo (%)"]
+):
+    fig = px.bar(coletivo_df, x="Jogo", y=coluna, color="Resultado", title=titulo)
+    st.plotly_chart(fig)
+
+# Comparação por resultado
+st.markdown("### 🆚 Comparação: Vitórias x Derrotas")
+comparativo = coletivo_df.groupby("Resultado")[["xG_SPFC", "xG_Adversario", "Posse_SPFC", "PPDA_SPFC"]].mean().round(2)
+st.dataframe(comparativo)
+
+# Ranking por desempenho
+st.markdown("### 🏆 Ranking por Desempenho (xG SPFC)")
+ranking = coletivo_df.sort_values(by="xG_SPFC", ascending=False)[["Jogo", "Placar", "xG_SPFC"]]
+st.dataframe(ranking.reset_index(drop=True))
+
+# Conclusão
+st.markdown("### 📝 Conclusões do Desempenho Coletivo")
+st.markdown(\"\"\"
+O São Paulo Sub-17 apresentou desempenho sólido na competição, com destaque para:
+
+- **xG médio de 1.86**, indicando boa criação ofensiva.
+- **PPDA médio de 6.72**, refletindo pressão alta eficaz.
+- **Posse média de 54.17%**, demonstrando controle da bola.
+- Defensivamente, sofreu **xG médio de 1.16**, o que revela certa exposição em alguns jogos decisivos.
+
+🏷️ Jogos com maior destaque ofensivo:
+- J1 (6x2, xG 2.98)
+- J5 (3x0, xG 2.98)
+
+📉 Jogos com maior dificuldade defensiva:
+- J2 (xG adversário 1.62)
+- J7 (derrota 0x1, xG adversário 1.54)
+
+A alternância entre domínio e equilíbrio em diferentes jogos mostra versatilidade tática, porém há margem para ajustes defensivos, especialmente contra adversários mais intensos como o Bahia. O time mostrou capacidade de adaptação com formações variadas.
+\"\"\")
+
+# O restante continua com o painel individual...
