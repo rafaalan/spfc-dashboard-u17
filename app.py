@@ -130,5 +130,63 @@ A alternância entre domínio e equilíbrio em diferentes jogos mostra versatili
 
 # Seção: Painel Coletivo (como já está)
 # [... mantido igual ao código anterior ...]
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+
+# Carregar dados principais
+@st.cache_data
+def load_data():
+    data = pd.DataFrame([
+        {"Jogo": "J1", "Data": "11/03/2025", "Adversário": "Instituto Ismaily", "Placar": "6x2", "xG_SPFC": 2.98, "xG_Adversario": 0.24, "Posse_SPFC": 65, "Posse_Adv": 35, "PPDA_SPFC": 3.2, "PPDA_Adv": 21.5, "Finalizacoes_SPFC": "26/9", "Finalizacoes_Adv": "5/3", "Faltas_SPFC": 13, "Faltas_Adv": 3, "Escanteios_SPFC": 2, "Escanteios_Adv": 1, "Formacao_1T": "4-1-4-1", "Formacao_2T": "4-1-4-1"},
+        {"Jogo": "J2", "Data": "18/03/2025", "Adversário": "Athletico PR", "Placar": "1x0", "xG_SPFC": 0.74, "xG_Adversario": 1.62, "Posse_SPFC": 41, "Posse_Adv": 59, "PPDA_SPFC": 10.8, "PPDA_Adv": 9.8, "Finalizacoes_SPFC": "11/4", "Finalizacoes_Adv": "20/4", "Faltas_SPFC": 13, "Faltas_Adv": 3, "Escanteios_SPFC": 4, "Escanteios_Adv": 10, "Formacao_1T": "4-2-3-1", "Formacao_2T": "4-2-3-1"},
+        {"Jogo": "J3", "Data": "25/03/2025", "Adversário": "Athletico PR", "Placar": "3x2", "xG_SPFC": 1.48, "xG_Adversario": 1.29, "Posse_SPFC": 43, "Posse_Adv": 57, "PPDA_SPFC": 10.3, "PPDA_Adv": 8.6, "Finalizacoes_SPFC": "19/9", "Finalizacoes_Adv": "19/5", "Faltas_SPFC": 15, "Faltas_Adv": 17, "Escanteios_SPFC": 2, "Escanteios_Adv": 3, "Formacao_1T": "4-1-4-1", "Formacao_2T": "4-1-4-1"},
+        {"Jogo": "J5", "Data": "15/04/2025", "Adversário": "Sport Recife", "Placar": "3x0", "xG_SPFC": 2.98, "xG_Adversario": 0.25, "Posse_SPFC": 59, "Posse_Adv": 41, "PPDA_SPFC": 4.7, "PPDA_Adv": 15.1, "Finalizacoes_SPFC": "20/10", "Finalizacoes_Adv": "6/2", "Faltas_SPFC": 15, "Faltas_Adv": 15, "Escanteios_SPFC": 2, "Escanteios_Adv": 1, "Formacao_1T": "4-2-3-1", "Formacao_2T": "4-2-3-1"},
+        {"Jogo": "J6", "Data": "22/04/2025", "Adversário": "Bahia", "Placar": "4x4", "xG_SPFC": 1.86, "xG_Adversario": 1.00, "Posse_SPFC": 56, "Posse_Adv": 44, "PPDA_SPFC": 8.9, "PPDA_Adv": 8.7, "Finalizacoes_SPFC": "20/6", "Finalizacoes_Adv": "10/4", "Faltas_SPFC": 14, "Faltas_Adv": 12, "Escanteios_SPFC": 3, "Escanteios_Adv": 2, "Formacao_1T": "4-2-3-1", "Formacao_2T": "4-2-3-1"},
+        {"Jogo": "J7", "Data": "29/04/2025", "Adversário": "Bahia", "Placar": "0x1", "xG_SPFC": 1.00, "xG_Adversario": 1.54, "Posse_SPFC": 61, "Posse_Adv": 39, "PPDA_SPFC": 5.4, "PPDA_Adv": 8.0, "Finalizacoes_SPFC": "19/4", "Finalizacoes_Adv": "12/4", "Faltas_SPFC": 12, "Faltas_Adv": 17, "Escanteios_SPFC": 8, "Escanteios_Adv": 8, "Formacao_1T": "4-3-3", "Formacao_2T": "4-3-3"}
+    ])
+    return data
+
+coletivo_df = load_data()
+
+# Novo ranking real (gols + xG + minutos)
+jogadores_ranking_df = pd.DataFrame([
+    {"Jogador": "João", "Minutos": 1334, "Gols": 188, "xG": 126.11},
+    {"Jogador": "Alisson", "Minutos": 1246, "Gols": 109, "xG": 83.18},
+    {"Jogador": "Angelo", "Minutos": 894, "Gols": 100, "xG": 77.77},
+    {"Jogador": "Thiago", "Minutos": 905, "Gols": 95, "xG": 73.26},
+    {"Jogador": "R. Zangelmi", "Minutos": 1638, "Gols": 102, "xG": 70.42},
+    {"Jogador": "Vitor Heleno", "Minutos": 1205, "Gols": 97, "xG": 70.02},
+    {"Jogador": "Geovanne", "Minutos": 816, "Gols": 89, "xG": 67.45},
+    {"Jogador": "Murilo Camargo", "Minutos": 392, "Gols": 76, "xG": 54.00},
+    {"Jogador": "Gustavo Afonso", "Minutos": 588, "Gols": 65, "xG": 45.16},
+    {"Jogador": "Leonardo Amaro", "Minutos": 961, "Gols": 49, "xG": 44.24},
+    {"Jogador": "Nicolas Kauan", "Minutos": 1002, "Gols": 47, "xG": 42.06},
+    {"Jogador": "Tiago Santos", "Minutos": 700, "Gols": 48, "xG": 40.63},
+    {"Jogador": "Guilherme Lino", "Minutos": 1152, "Gols": 44, "xG": 37.26},
+    {"Jogador": "Henrique", "Minutos": 363, "Gols": 41, "xG": 37.13},
+    {"Jogador": "Guilherme Ribeiro", "Minutos": 643, "Gols": 40, "xG": 36.42},
+    {"Jogador": "Jaison Gabriel", "Minutos": 399, "Gols": 38, "xG": 35.08},
+    {"Jogador": "Ryan", "Minutos": 300, "Gols": 36, "xG": 34.00},
+    {"Jogador": "Reniel", "Minutos": 178, "Gols": 34, "xG": 33.00},
+    {"Jogador": "Ruan Victor", "Minutos": 406, "Gols": 32, "xG": 30.00},
+    {"Jogador": "Cainan Duarte", "Minutos": 228, "Gols": 29, "xG": 28.00}
+])
+
+# Exibir ranking ao final da página
+st.markdown("---")
+st.markdown("### 🏆 Ranking Geral de Atletas (mínimo 5 minutos em campo)")
+st.dataframe(jogadores_ranking_df, use_container_width=True)
+
+# Gráficos interativos comparativos
+st.markdown("### 📊 Comparação de Métricas por Jogador")
+metric = st.selectbox("Escolha a métrica para comparação:", ["Gols", "xG", "Minutos"])
+top5_df = jogadores_ranking_df.sort_values(by=metric, ascending=False).head(5)
+fig = px.bar(top5_df, x="Jogador", y=metric, title=f"Top 5 Jogadores por {metric}", color=metric, height=500)
+st.plotly_chart(fig, use_container_width=True)
+
+# Exibir também a tabela completa (opcional)
+st.markdown("### Tabela completa de atletas")
+st.dataframe(jogadores_ranking_df.sort_values(by=metric, ascending=False), use_container_width=True)
 
 
