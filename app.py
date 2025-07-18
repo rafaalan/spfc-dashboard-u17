@@ -158,18 +158,11 @@ jogadores_ranking_df = pd.DataFrame([
     {"Jogador": "R. Zangelmi", "Minutos": 1638, "Gols": 102, "xG": 70.42},
     {"Jogador": "Vitor Heleno", "Minutos": 1205, "Gols": 97, "xG": 70.02},
     {"Jogador": "Geovanne", "Minutos": 816, "Gols": 89, "xG": 67.45},
-    {"Jogador": "Murilo Camargo", "Minutos": 392, "Gols": 76, "xG": 54.00},
-    {"Jogador": "Gustavo Afonso", "Minutos": 588, "Gols": 65, "xG": 45.16},
     {"Jogador": "Leonardo Amaro", "Minutos": 961, "Gols": 49, "xG": 44.24},
     {"Jogador": "Nicolas Kauan", "Minutos": 1002, "Gols": 47, "xG": 42.06},
     {"Jogador": "Tiago Santos", "Minutos": 700, "Gols": 48, "xG": 40.63},
     {"Jogador": "Guilherme Lino", "Minutos": 1152, "Gols": 44, "xG": 37.26},
-    {"Jogador": "Henrique", "Minutos": 363, "Gols": 41, "xG": 37.13},
     {"Jogador": "Guilherme Ribeiro", "Minutos": 643, "Gols": 40, "xG": 36.42},
-    {"Jogador": "Jaison Gabriel", "Minutos": 399, "Gols": 38, "xG": 35.08},
-    {"Jogador": "Ryan", "Minutos": 300, "Gols": 36, "xG": 34.00},
-    {"Jogador": "Reniel", "Minutos": 178, "Gols": 34, "xG": 33.00},
-    {"Jogador": "Ruan Victor", "Minutos": 406, "Gols": 32, "xG": 30.00},
     {"Jogador": "Cainan Duarte", "Minutos": 228, "Gols": 29, "xG": 28.00}
 ])
 
