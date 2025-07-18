@@ -140,7 +140,7 @@ O São Paulo Sub-17 apresentou desempenho sólido na competição, com destaque 
 - J7 (derrota 0x1, xG adversário 1.54)
 
 A alternância entre domínio e equilíbrio em diferentes jogos mostra versatilidade tática, porém há margem para ajustes defensivos, especialmente contra adversários mais intensos como o Bahia. O time mostrou capacidade de adaptação com formações variadas.
-"""), file_name="dados_spfc_sub17.csv", mime="text/csv")
+""")
 
 # Seção: Painel Coletivo (como já está)
 # [... mantido igual ao código anterior ...]
